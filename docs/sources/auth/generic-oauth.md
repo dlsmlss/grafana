@@ -173,6 +173,43 @@ allowed_organizations =
     team_ids =
     allowed_organizations =
     ```
+### Set up OAuth2 with Microsoft ADFS Server (based on Windows Server 2016)
+
+1.  Run "AD FS Management" console, right click on "Application Groups" and selcet "Add Application Group..."
+
+2.  Name it as you wish (for example Grafana), select "Web browser accesing a web application" and press next
+
+3.  Click "App Registrations" and add a new application registration:
+    - Name: Grafana
+    - Application type: Web app / API
+    - Sign-on URL: `https://<grafana domain>/login/generic_oauth`
+
+4.  Click the name of the new application to open the application details page.
+
+5.  Note down the "Application ID", this will be the OAuth client id.
+
+6.  Click "Settings", then click "Keys" and add a new entry under Passwords
+    - Key Description: Grafana OAuth
+    - Duration: Never Expires
+
+7.  Click Save then copy the key value, this will be the OAuth client secret.
+
+8.  Configure Grafana as follows:
+
+    ```bash
+    [auth.generic_oauth]
+    name = Azure AD
+    enabled = true
+    allow_sign_up = true
+    client_id = <application id>
+    client_secret = <key value>
+    scopes = openid email name
+    auth_url = https://login.microsoftonline.com/<directory id>/oauth2/authorize
+    token_url = https://login.microsoftonline.com/<directory id>/oauth2/token
+    api_url =
+    team_ids =
+    allowed_organizations =
+    ```
 
 ## Set up OAuth2 with Centrify
 
